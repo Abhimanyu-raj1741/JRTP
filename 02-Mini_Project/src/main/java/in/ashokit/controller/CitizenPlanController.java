@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import in.ashokit.Binding.SearchCriteria;
+import in.ashokit.entity.CitizenPlan;
 import in.ashokit.service.CitizenPlanService;
 
 @Controller
@@ -20,27 +21,30 @@ public class CitizenPlanController {
 	
 		@GetMapping("/")
 		public String index(Model model) {
-			List<String> planNames= service.getPlanNames();
-			List<String> planStatus = service.getPlanStatus();
-			
-			model.addAttribute("plannames", planNames);
-			model.addAttribute("planstatus", planStatus);
+			formInit(model);
 			
 			model.addAttribute("search", new SearchCriteria());
 			
 			
 			return "index";
 		}
-		
-		@PostMapping("/filter-data")
-		public String handleSearchBtn(@ModelAttribute("search") SearchCriteria criteria, Model model)
-		{
-			System.out.println(criteria);
+
+		private void formInit(Model model) {
 			List<String> planNames= service.getPlanNames();
 			List<String> planStatus = service.getPlanStatus();
 			
 			model.addAttribute("plannames", planNames);
 			model.addAttribute("planstatus", planStatus);
+		}
+		
+		@PostMapping("/filter-data")
+		public String handleSearchBtn(@ModelAttribute("search") SearchCriteria criteria, Model model)
+		{
+			System.out.println(criteria);
+			
+			List<CitizenPlan> citizensInfo = service.searchCitizens(criteria);
+			formInit(model);
+			model.addAttribute("citizens", citizensInfo);
 			return "index";
 		}
 		

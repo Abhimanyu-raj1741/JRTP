@@ -12,10 +12,10 @@ public class SearchCriteria {
 	
 	private String gender;
 	
-	@DateTimeFormat
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate planStartDate;
 	
-	@DateTimeFormat
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate planEndDate;
 
 	public String getPlanName() {
