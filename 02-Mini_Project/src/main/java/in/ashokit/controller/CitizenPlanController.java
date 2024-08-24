@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import in.ashokit.Binding.SearchCriteria;
 import in.ashokit.entity.CitizenPlan;
 import in.ashokit.service.CitizenPlanService;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class CitizenPlanController {
@@ -48,8 +49,26 @@ public class CitizenPlanController {
 			return "index";
 		}
 		
-		
-		
+		@GetMapping("/excel")
+		public void downloadExcel(HttpServletResponse response) throws Exception {
+			response.setContentType("application/octet-stream");
+			
+			String headerKey = "Content-Disposition";
+			String headerValue = "attachment;filename=Report.xls";
+			response.addHeader(headerKey,headerValue);
+			
+			service.generateExcel(response);
+		}
+		@GetMapping("/pdf")
+		public void downloadPdf(HttpServletResponse response) throws Exception {
+			response.setContentType("application/pdf");
+			
+			String headerKey = "Content-Disposition";
+			String headerValue = "attachment;filename=Report.pdf";
+			response.addHeader(headerKey,headerValue);
+			
+			service.generateExcel(response);
+		}
 	}
 	
 

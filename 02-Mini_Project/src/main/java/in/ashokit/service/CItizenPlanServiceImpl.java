@@ -9,10 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+
 import in.ashokit.Binding.SearchCriteria;
 import in.ashokit.entity.CitizenPlan;
 import in.ashokit.repo.CitizenPlanRepo;
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -67,7 +73,7 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 	}
 	
 	@Override
-	public void generateExcel(HttpServlet response) {
+	public void generateExcel(HttpServletResponse response) throws Exception{
 		// TODO Auto-generated method stub
 		
 		List<CitizenPlan> records = repo.findAll();
@@ -96,12 +102,27 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 			dataRow.createCell(5).setCellValue(record.getPlanStatus());
 			rowIndex++;
 		}
+	         ServletOutputStream outputStream =  response.getOutputStream();
+	         workbook.write(outputStream);
+	         workbook.close();
+	         outputStream.close();
+	         
+	      
 
 	}
 	
 	@Override
-	public void generatePdf(HttpServletResponse response) {
+	public void generatePdf(HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
+		List<CitizenPlan> records = repo.findAll();
+		Document pdfDoc = new Document(PageSize.A4);
+		ServletOutputStream outputStream = response.getOutputStream();
+		PdfWriter.getInstance(pdfDoc, outputStream);
+		pdfDoc.open();
+		Paragraph p = new Paragraph("Citizen Plans Info");
+		pdfDoc.add(p);
 		
+		pdfDoc.close();
+		outputStream.close();
 	}
 }
