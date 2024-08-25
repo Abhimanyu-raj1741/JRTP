@@ -10,6 +10,7 @@ public class SearchCriteria {
 	
 	private String planStatus;
 	
+	
 	private String gender;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")

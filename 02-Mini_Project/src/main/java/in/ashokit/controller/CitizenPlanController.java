@@ -67,7 +67,7 @@ public class CitizenPlanController {
 			String headerValue = "attachment;filename=Report.pdf";
 			response.addHeader(headerKey,headerValue);
 			
-			service.generateExcel(response);
+			service.generatePdf(response);
 		}
 	}
 	
