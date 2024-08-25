@@ -144,17 +144,15 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 		
 		
 		Document pdfDoc1 = new Document(PageSize.A4); // browser
-		Document pdfDoc2 = new Document(PageSize.A4);  // attachment
-		
-		
 		ServletOutputStream outputStream = response.getOutputStream();
 		PdfWriter.getInstance(pdfDoc1, outputStream);
 		pdfDoc1.open();
 		
+		
+		Document pdfDoc2 = new Document(PageSize.A4);  // attachment
 		File f = new File("Report.pdf");
 		FileOutputStream fos = new FileOutputStream(f);
 		PdfWriter.getInstance(pdfDoc2, fos);
-		
 		pdfDoc2.open();
 		
 		com.lowagie.text.Font fontTiltle = FontFactory.getFont(FontFactory.TIMES_ROMAN);
@@ -210,12 +208,15 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 		pdfDoc1.add(table);
 		pdfDoc2.add(table);
 		
-
-		emailUtils.sendEmail(f);
-		pdfDoc2.close();
-		fos.close();
 		pdfDoc1.close();
 		outputStream.close();
+		
+		pdfDoc2.close();
+		fos.close();
+
+		emailUtils.sendEmail(f);
+		
+		
 		
 	}
 }
