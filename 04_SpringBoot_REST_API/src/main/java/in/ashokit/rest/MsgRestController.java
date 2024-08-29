@@ -13,19 +13,23 @@ public class MsgRestController {
 	@GetMapping("/welcome")
 	public String getWelcomeMsg() {
 		// Logger level 
-		logger.trace("this is log  - trace msg");
-		logger.debug("this is log - debug msg ");
-		logger.info("This is log - info msg");
-		logger.warn("this is log - warn msg");
-		logger.error("this is log - error msg");
+		logger.info(" welcome() method execution start...");
 		
 		String msg= "Welcome to Abhimanyu Webseite";
+		
+		logger.info("welcome () method execution end....");
 		
 		return msg;
 	}
 	@GetMapping("/greet")
 	public String getGreetMsg() {
+		
+		logger.info("Greet () method execution end....");
+		
 		String msg= "Hi Abhimanyu Good Morning ";
+		
+		logger.info("Greet () method execution end....");
+		
 		return msg;
 	}
 }
