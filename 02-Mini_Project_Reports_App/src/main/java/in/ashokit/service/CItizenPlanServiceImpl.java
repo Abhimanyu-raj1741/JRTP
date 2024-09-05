@@ -92,7 +92,11 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 		
 		List<CitizenPlan> records = repo.findAll();
 		
-		HSSFWorkbook workbook  = new HSSFWorkbook();
+		try(HSSFWorkbook workbook  = new HSSFWorkbook();) {
+			
+		
+		
+		
 		HSSFSheet sheet = workbook.createSheet("Data");
 		HSSFRow headerRow = sheet.createRow(0) ;
 		
@@ -125,8 +129,15 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 		     
 	         ServletOutputStream outputStream =  response.getOutputStream();
 	         workbook.write(outputStream);
-	         workbook.close();
 	         outputStream.close();
+	         fos.close();
+	}
+	
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+	        
 	         
 	      
 
@@ -142,79 +153,84 @@ public class CItizenPlanServiceImpl implements CitizenPlanService{
 		
 		
 		
+		try(Document pdfDoc1 = new Document(PageSize.A4);
+			Document pdfDoc2 = new Document(PageSize.A4);){
+			
+			ServletOutputStream outputStream = response.getOutputStream();
+			PdfWriter.getInstance(pdfDoc1, outputStream);
+			pdfDoc1.open();
+			
+			
+			// attachment
+			File f = new File("Report.pdf");
+			FileOutputStream fos = new FileOutputStream(f);
+			PdfWriter.getInstance(pdfDoc2, fos);
+			pdfDoc2.open();
+			
+			com.lowagie.text.Font fontTiltle = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+		    fontTiltle.setSize(20);
+			Paragraph p = new Paragraph("Citizen Plans Info",fontTiltle);
+			p.setAlignment(Paragraph.ALIGN_CENTER);
+			pdfDoc1.add(p);
+			pdfDoc2.add(p);
+			
+			  PdfPTable table = new PdfPTable(6);
+			  table.setWidthPercentage(100);
+			   table.setWidths(new int[] {3,3,3,3,3,3});
+			   table.setSpacingBefore(5);
+			    
+			    PdfPCell cell = new PdfPCell();
+			    // Setting the background color and padding of the table cell
+			    cell.setBackgroundColor(CMYKColor.BLUE);
+			    cell.setPadding(5);
+			    
+			    com.lowagie.text.Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+			    font.setColor(CMYKColor.WHITE);
+			    
+			    cell.setPhrase(new Phrase("Name", font));
+			    table.addCell(cell);
+			    
+			    cell.setPhrase(new Phrase("Email", font));
+			    table.addCell(cell);
+			    
+			    cell.setPhrase(new Phrase("Gender", font));
+			    table.addCell(cell);
+			    
+			    cell.setPhrase(new Phrase("SSN", font));
+			    table.addCell(cell);
+			    
+			    cell.setPhrase(new Phrase("Plan Name", font));
+			    table.addCell(cell);
+			    
+			    cell.setPhrase(new Phrase("Plan Status", font));
+			    table.addCell(cell);
+			    
+			    List<CitizenPlan> records = repo.findAll();
+			    
+			    for(CitizenPlan record:records)
+			    {
+			    	table.addCell(record.getName());
+			    	table.addCell(record.getEmail());
+			    	table.addCell(record.getGender());
+			        table.addCell(String.valueOf(record.getSsn()));
+			    	table.addCell(record.getPlanName());
+			    	table.addCell(record.getPlanStatus());
+			    }
+			
+			pdfDoc1.add(table);
+			pdfDoc2.add(table);
+			outputStream.close();
+			fos.close();
+			emailUtils.sendEmail(f);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		
-		Document pdfDoc1 = new Document(PageSize.A4); // browser
-		ServletOutputStream outputStream = response.getOutputStream();
-		PdfWriter.getInstance(pdfDoc1, outputStream);
-		pdfDoc1.open();
 		
-		
-		Document pdfDoc2 = new Document(PageSize.A4);  // attachment
-		File f = new File("Report.pdf");
-		FileOutputStream fos = new FileOutputStream(f);
-		PdfWriter.getInstance(pdfDoc2, fos);
-		pdfDoc2.open();
-		
-		com.lowagie.text.Font fontTiltle = FontFactory.getFont(FontFactory.TIMES_ROMAN);
-	    fontTiltle.setSize(20);
-		Paragraph p = new Paragraph("Citizen Plans Info",fontTiltle);
-		p.setAlignment(Paragraph.ALIGN_CENTER);
-		pdfDoc1.add(p);
-		pdfDoc2.add(p);
-		
-		  PdfPTable table = new PdfPTable(6);
-		  table.setWidthPercentage(100);
-		   table.setWidths(new int[] {3,3,3,3,3,3});
-		   table.setSpacingBefore(5);
-		    
-		    PdfPCell cell = new PdfPCell();
-		    // Setting the background color and padding of the table cell
-		    cell.setBackgroundColor(CMYKColor.BLUE);
-		    cell.setPadding(5);
-		    
-		    com.lowagie.text.Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN);
-		    font.setColor(CMYKColor.WHITE);
-		    
-		    cell.setPhrase(new Phrase("Name", font));
-		    table.addCell(cell);
-		    
-		    cell.setPhrase(new Phrase("Email", font));
-		    table.addCell(cell);
-		    
-		    cell.setPhrase(new Phrase("Gender", font));
-		    table.addCell(cell);
-		    
-		    cell.setPhrase(new Phrase("SSN", font));
-		    table.addCell(cell);
-		    
-		    cell.setPhrase(new Phrase("Plan Name", font));
-		    table.addCell(cell);
-		    
-		    cell.setPhrase(new Phrase("Plan Status", font));
-		    table.addCell(cell);
-		    
-		    List<CitizenPlan> records = repo.findAll();
-		    
-		    for(CitizenPlan record:records)
-		    {
-		    	table.addCell(record.getName());
-		    	table.addCell(record.getEmail());
-		    	table.addCell(record.getGender());
-		        table.addCell(String.valueOf(record.getSsn()));
-		    	table.addCell(record.getPlanName());
-		    	table.addCell(record.getPlanStatus());
-		    }
-		
-		pdfDoc1.add(table);
-		pdfDoc2.add(table);
-		
-		pdfDoc1.close();
-		outputStream.close();
-		
-		pdfDoc2.close();
-		fos.close();
 
-		emailUtils.sendEmail(f);
+		
 		
 		
 		
