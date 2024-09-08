@@ -1,6 +1,7 @@
 package in.ashokit.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.BeanUtils;
@@ -102,7 +103,32 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public LoginResponse updatePwd(PwdChangeRequest request) {
 		// TODO Auto-generated method stub
-		return null;
+		  Integer userid = request.getUserid();
+		  
+		  LoginResponse response = new LoginResponse();
+		  Optional<UserEntity> byId = userrepo.findById(userid);
+		
+		  if(byId.isPresent())
+		  {   // update pwd 
+			  UserEntity entity =byId.get();
+			  entity.setPwd(request.getPwd());
+			  entity.setPwdChanged(true);
+			  userrepo.save(entity);
+			  
+			  // construct dashboard response 
+			  response.setValidLogin(true);
+			  DashboardResponse dashboard = new DashboardResponse();
+			  dashboard.setPlansCount(61);
+			  dashboard.setBenifitAmtTotal(3400.00);
+			  dashboard.setCitizensApcnt(1000l);
+			  dashboard.setCitizensDnCnt(500l);
+			  response.setDashboard(dashboard);
+			  
+			  
+			 
+		  }
+		
+		return response;
 	}
 
 	@Override
