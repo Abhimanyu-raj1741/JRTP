@@ -60,7 +60,6 @@ INDEX VERSION 1.134+E:\JRTP BY AKIT\.metadata\.plugins\org.eclipse.jdt.core
 740430126.index
 692948213.index
 3626433781.index
-3299505920.index
 2487120969.index
 795486885.index
 1865797976.index

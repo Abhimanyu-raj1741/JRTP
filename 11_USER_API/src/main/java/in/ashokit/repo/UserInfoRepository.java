@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtensi
 import in.ashokit.entity.*;
 public interface UserInfoRepository extends JpaRepository<UserEntity, Integer> {
        
+	public UserEntity findByEmail(String email);
+	
 	
 }

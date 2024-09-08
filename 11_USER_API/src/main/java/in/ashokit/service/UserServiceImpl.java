@@ -134,7 +134,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean recoverPwd(String email) {
 		// TODO Auto-generated method stub
-		return false;
+		UserEntity  user = userrepo.findByEmail(email);
+		if(user==null)
+		{
+			return false;
+		}
+		String subject ="IES - Recover Password";
+		String body  = "Your Password  :: "+ user.getPwd();
+		
+		return emailUtils.sendEmail(email, subject, body);
+		
 	}
 	
 	public String generateTempPwd() {
