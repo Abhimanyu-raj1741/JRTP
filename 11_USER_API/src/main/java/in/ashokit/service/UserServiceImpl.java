@@ -1,5 +1,5 @@
 package in.ashokit.service;
-
+import in.ashokit.response.SignUpResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -27,33 +27,55 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private EmailUtils emailUtils;
 	
-	@Override
-	public boolean saveUser(SignUpRequest request) {
+	
+	public SignUpResponse saveUser(SignUpRequest request) {
+		
+		 
+		// for duplicate mail -> Account already exist with the email 
+		 
+		// for registration success -> Registration Success 
+		 
+		 
+		// any exception -> Registration Failed
+		  SignUpResponse response = new SignUpResponse();
+		
+		// unique email verification 
+				 UserEntity byEmail = userrepo.findByEmail(request.getEmail());
+		 if(byEmail!=null) {
+			 response.setErrorMsg("Duplicate email");
+			 return response;
+		 }
+	
        
 		// generate temporary pwd
 		
 		  String tempPwd = generateTempPwd();
 		  request.setPwd(tempPwd);
-		  request.setPwdChanged(false);
+		  request.setPwdChanged("false");
 		  
 		// save user record in db
 		 
-		  UserEntity entity = new UserEntity();
-		  BeanUtils.copyProperties(request,entity);
-		  userrepo.save(entity);
+			  UserEntity entity = new UserEntity();
+			  BeanUtils.copyProperties(request,entity);
+			  userrepo.save(entity);
+		
+			  
+			// send email to user with credentials
+			  String subject =" IES-Accout Created";
+			  
+			  String body ="Hi , "+request.getName()+" Your Temp Password for Login : "+ tempPwd;
+			  boolean isSent = emailUtils.sendEmail(request.getEmail(),subject, body);
+			  if(isSent)
+		      response.setSuccessMsg("Registration Succcessfull");
+			  else 
+				  response.setErrorMsg("Registration Failed");
+		  
+         return response;
 	
-		  
-		// send email to user with credentials
-		  String subject =" IES-Accout Created";
-		  
-		  String body ="Hi , "+request.getName()+" Your Temp Password for Login : "+ tempPwd;
-		  boolean isSent = emailUtils.sendEmail(request.getEmail(),subject, body);
-
-		return (isSent)?true:false;
 	}
 
 	@Override
-	public LoginResponse usserLogin(LoginRequest request) {
+	public LoginResponse userLogin(LoginRequest request) {
 		
 		LoginResponse response = new LoginResponse();
 		
@@ -70,7 +92,7 @@ public class UserServiceImpl implements UserService {
 			response.setUserid(user.getUserid());
 			response.setUserType(user.getUserType());
 			
-			if(user.isPwdChanged()) {
+			if(user.getPwdChanged().equals("true")){
 				//second login 
 				response.setPwdChanged(true);
 				response.setValidLogin(true);
@@ -112,7 +134,7 @@ public class UserServiceImpl implements UserService {
 		  {   // update pwd 
 			  UserEntity entity =byId.get();
 			  entity.setPwd(request.getPwd());
-			  entity.setPwdChanged(true);
+			  entity.setPwdChanged("true");
 			  userrepo.save(entity);
 			  
 			  // construct dashboard response 

@@ -8,8 +8,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="user_info")
 public class UserEntity {
 	
 	@Id
@@ -32,7 +34,7 @@ public class UserEntity {
 	
 	private String userType;
 	
-	private boolean  pwdChanged;
+	private String  pwdChanged;
 
 	public Integer getUserid() {
 		return userid;
@@ -106,13 +108,15 @@ public class UserEntity {
 		this.userType = userType;
 	}
 
-	public boolean isPwdChanged() {
+	public String getPwdChanged() {
 		return pwdChanged;
 	}
 
-	public void setPwdChanged(boolean pwdChanged) {
+	public void setPwdChanged(String pwdChanged) {
 		this.pwdChanged = pwdChanged;
 	}
+
+	
 	
 	
 	

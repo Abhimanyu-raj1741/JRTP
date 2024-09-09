@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class SignUpRequest {
    
-    //private Integer userid;
+    private Integer userid;
 	
 	private String name;
 	
@@ -22,15 +22,15 @@ public class SignUpRequest {
 	
 	private String userType;
 	
-	private boolean  pwdChanged;
+	private String  pwdChanged;
 	
-//	public Integer getUserid() {
-//		return userid;
-//	}
-//
-//	public void setUserid(Integer userid) {
-//		this.userid = userid;
-//	}
+	public Integer getUserid() {
+		return userid;
+	}
+
+	public void setUserid(Integer userid) {
+		this.userid = userid;
+	}
 
 	public String getName() {
 		return name;
@@ -96,13 +96,15 @@ public class SignUpRequest {
 		this.userType = userType;
 	}
 
-	public boolean isPwdChanged() {
+	public String getPwdChanged() {
 		return pwdChanged;
 	}
 
-	public void setPwdChanged(boolean pwdChanged) {
+	public void setPwdChanged(String pwdChanged) {
 		this.pwdChanged = pwdChanged;
 	}
+
+	
 
 
 }
