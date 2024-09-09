@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class SignUpRequest {
    
-    private Integer userid;
+    //private Integer userid;
 	
 	private String name;
 	
@@ -24,13 +24,13 @@ public class SignUpRequest {
 	
 	private boolean  pwdChanged;
 	
-	public Integer getUserid() {
-		return userid;
-	}
-
-	public void setUserid(Integer userid) {
-		this.userid = userid;
-	}
+//	public Integer getUserid() {
+//		return userid;
+//	}
+//
+//	public void setUserid(Integer userid) {
+//		this.userid = userid;
+//	}
 
 	public String getName() {
 		return name;

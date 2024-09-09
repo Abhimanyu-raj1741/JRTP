@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 		// send email to user with credentials
 		  String subject =" IES-Accout Created";
 		  
-		  String body = " Your Temp Password for Login : "+ tempPwd;
+		  String body ="Hi , "+request.getName()+" Your Temp Password for Login : "+ tempPwd;
 		  boolean isSent = emailUtils.sendEmail(request.getEmail(),subject, body);
 
 		return (isSent)?true:false;
