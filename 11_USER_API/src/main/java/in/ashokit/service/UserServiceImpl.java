@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 			  
 			  // construct dashboard response 
 			  response.setValidLogin(true);
-			  DashboardResponse dashboard = new DashboardResponse();
+			  response.setPwdChanged(true);		  DashboardResponse dashboard = new DashboardResponse();
 			  dashboard.setPlansCount(61);
 			  dashboard.setBenifitAmtTotal(3400.00);
 			  dashboard.setCitizensApcnt(1000l);
