@@ -32,9 +32,9 @@ public class AppRestController {
     }
 	
 	@GetMapping("/user/{userId}/{userType}")
-	public ResponseEntity<List<CitizenApp>> getApplication(@PathVariable  Integer userId, String userType ){
+	public ResponseEntity<List<CitizenApp>> getApplication(@PathVariable("userId")  Integer userId, @PathVariable("userType") String userType ){
 		
-		List<CitizenApp> applications = service.getApplications(userId, ssn);
+		List<CitizenApp> applications = service.getApplications(userId, userType);
 		
 		return new ResponseEntity<>(applications,HttpStatus.OK);
 	}
